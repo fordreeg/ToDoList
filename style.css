@@ -56,7 +56,7 @@ body {
     cursor: pointer;
     text-decoration: underline;
 }
-#select:focus {
+.select:focus {
     outline: none;
 }
 
