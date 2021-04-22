@@ -1,93 +1,81 @@
-// class Task {
-//     constructor () {
-//         this.id = id;
-//         this.title = title;
-//         this.description = description;
-//         this.status = status;
-//     }
+class Task {
+    id;
+    title;
+    description;
+    status;
 
-//     getId() {
-//         this.id = 1;
-//         return this.id ++
-//     }
-// };
+    constructor (id, title, description) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = enumTaskStatus.Undone;
+    }
+};
 
 
+class TaskList {
+    list;
 
-// class TaskList {
+    constructor () {
+        this.list = [];
+    }
 
-// };
+    add(title, description) {
+        let newTask = new Task(this.list.length, title, description);
+        this.list.push(newTask);
+        this.renderTask(table, newTask);
+        this.updateStatus();
+    }
+
+    renderTask(parent, task) {
+        parent.innerHTML += `
+                            <tr class="row" >
+                                <td class="cell cell-id">#${task.id + 1}</td>
+                                <td class="cell cell-name">${task.title}</td>
+                                <td class="cell cell-desc">${task.description}</td>
+                                <td class="cell cell-status">${task.status}</td>  
+                            </tr>
+        `;
+    }
+
+    updateStatus() {
+
+        const row = document.getElementsByClassName('row');
+        for (let key of row) {
+            console.log(key);
+            break;
+        }
+    }
+}
 
 const enumTaskStatus = Object.freeze({
-                                        'InProgress': 'InProgress', 
-                                        'Done': 'Done', 
-                                        'Undone': 'Undone'
-                                    });
+    InProgress: 'InProgress',
+    Undone: 'Undone',
+    Done: 'Done',
+});
 
+let taskList = new TaskList();
 
 const btnAddTask = document.querySelector('.btn'),
       form = document.getElementById('form'),
       inputName = document.getElementById('name'),
       textArea = document.getElementById('descr'),
-      table = document.querySelector('.tbody'),
-      select = document.getElementsByClassName('select'),
-      row = document.getElementsByClassName('row');
+      table = document.querySelector('.tbody');
+      select = document.getElementsByClassName('select');
+    //   row = document.getElementsByClassName('row');
 
 
 btnAddTask.addEventListener('click', () => {
     form.classList.toggle('hidden');
 });
 
-let id = 1;
-
 form.addEventListener('submit', item => {
     item.preventDefault();
+    taskList.add(inputName.value, textArea.value);
 
-    table.innerHTML += `<tr class="row" >
-                            <td class="cell cell-id">#${id++}</td>
-                            <td class="cell cell-name">${inputName.value}</td>
-                            <td class="cell cell-desc">
-                                ${textArea.value}
-                            </td>
-                            <td class="cell cell-status">
-                                <select id="select" class="select">
-                                    <option value="${enumTaskStatus.InProgress}" selected>${enumTaskStatus.InProgress}</option>
-                                    <option value="${enumTaskStatus.Done}">${enumTaskStatus.Done}</option>
-                                    <option value="${enumTaskStatus.Undone}">${enumTaskStatus.Undone}</option>
-                                </select> 
-                            </td>
-                            
-                        </tr>
-                      `;
+
     inputName.value = "";
     textArea.value = "";
     item.target.classList.toggle('hidden');
-
-    for (let key of select) {
-        console.log(key.value);
-        key.addEventListener('change', item => {
-            let parent = item.target.parentElement.parentElement;
-            let enumItem = item.target.value;
-
-            switch (enumItem) {
-                case enumTaskStatus.Done: 
-                    parent.classList.remove('undone');
-                    parent.classList.add('done');
-                break;
-
-                case enumTaskStatus.Undone: 
-                    parent.classList.remove('done');
-                    parent.classList.add('undone');
-                break;
-
-                case enumTaskStatus.InProgress: 
-                    parent.classList.remove('undone');
-                    parent.classList.remove('done');
-                break;
-            }
-        });
-        break;
-    }
 });
-
 
