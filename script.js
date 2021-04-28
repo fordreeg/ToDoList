@@ -1,21 +1,34 @@
+const btnAddTask = document.querySelector('.btn-newTask'),
+      form = document.getElementById('form'),
+      inputName = document.getElementById('name'),
+      textArea = document.getElementById('textArea'),
+      wrapper = document.querySelector('.wrapper');
+
+
+const enumTaskStatus = Object.freeze(
+    {
+        InProgress: 'InProgress',
+        Done: 'Done',
+        Undone: 'Undone'
+    });
+
 class Task {
     id;
     title;
     description;
-    statusOne;
-    statusTwo;
-    statusThree;
+    status;
 
-    constructor (id, title, description, statusOne, statusTwo, statusThree) {
+    constructor(id, title, description){
         this.id = id;
         this.title = title;
         this.description = description;
-        this.statusOne = statusOne;
-        this.statusTwo = statusTwo;
-        this.statusThree = statusThree;
+        this.status = enumTaskStatus.InProgress;
+	}
+
+    updateStatus(newStatus){
+        this.status = newStatus;
     }
 };
-
 
 class TaskList {
     list;
@@ -24,71 +37,74 @@ class TaskList {
         this.list = [];
     }
 
-    add(title, description, statusOne, statusTwo, statusThree) {
-        let newTask = new Task(this.list.length, title, description, statusOne, statusTwo, statusThree);
+    add(title, description) {
+        let newTask = new Task(this.list.length + 1, title, description);
         this.list.push(newTask);
-        this.renderTask(table, newTask);
-        this.updateStatus(select);
-    }
 
-    renderTask(parent, task) {
-        parent.innerHTML += `
-                            <tr class="row" >
-                                <td class="cell cell-id">#${task.id + 1}</td>
-                                <td class="cell cell-name">${task.title}</td>
-                                <td class="cell cell-desc">${task.description}</td>
-                                <td class="cell cell-status">
-                                    <select class="select">
-                                        <option value="${task.statusOne}">${task.statusOne}</option>
-                                        <option value="${task.statusTwo}">${task.statusTwo}</option>
-                                        <option value="${task.statusThree}">${task.statusThree}</option>
-                                    </select>
-                                </td>  
-                            </tr>
-        `;
-    }
+        let divTask = document.createElement('div');
+        divTask.classList.add('task');
 
-    updateStatus(arrItem) {
-
-        for (let key of arrItem) {
-            key.addEventListener('change', e => {
-                if (e.target.classList.contains('select')) {
-                    let selectValue = e.target.value;
-
-                    switch (selectValue) {
-                        case 'Done': key.parentElement.parentElement.classList.remove('undone');;
-                                     key.parentElement.parentElement.classList.add('done');
-                                    break;
-                        case 'Undone': key.parentElement.parentElement.classList.remove('done');
-                                       key.parentElement.parentElement.classList.add('undone');
-                                    break;
-                        case 'InProgress': key.parentElement.parentElement.classList.remove('done');
-                                           key.parentElement.parentElement.classList.remove('undone');
-                                    break;
-                    }
-
+        for(let key in newTask){
+            if(key === 'status') {
+                let spanStatus = document.createElement('span');
+                spanStatus.classList.add('status');
+            
+                let select = document.createElement('select');
+                select.classList.add('select');
+                select.textContent = newTask.status;
+            
+                for (let key in enumTaskStatus) {
+                    let option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = enumTaskStatus[key];
+                    select.append(option);
                 }
-            });
+            
+                select.addEventListener('change', (e) => {
+                    taskList.list[newTask.id - 1].updateStatus(enumTaskStatus[select.value]);
+
+                    
+                    // if(e.target === 'Done') {
+                    //     e.target.parentElement.classList.remove('undone');
+                    //     e.target.parentElement.classList.add('done');
+                    // }
+                    // if(e.target === 'Undone') {
+                    //     e.target.parentElement.classList.remove('done');
+                    //     e.target.parentElement.classList.add('undone');
+                    // }
+                });
+                spanStatus.append(select);
+                divTask.append(spanStatus);
+            } 
+            
+            if(key === 'description') {
+                let spanDescr = document.createElement('span');
+                spanDescr.classList.add('descr');
+                spanDescr.textContent = description;
+                divTask.append(spanDescr);
+            }
+            
+            if(key === 'title') {
+                let spanName = document.createElement('span');
+                spanName.classList.add('name');
+                spanName.textContent = title;
+                divTask.append(spanName);
+            }
+
+            if(key === 'id') {
+                let spanId = document.createElement('span');
+                spanId.classList.add('id');
+                spanId.textContent = `#${newTask.id}`;
+                divTask.append(spanId);
+            }
         }
+        wrapper.append(divTask);
     }
 }
 
-const enumTaskStatus = Object.freeze({
-    InProgress: 'InProgress',
-    Done: 'Done',
-    Undone: 'Undone'
-});
+
 
 let taskList = new TaskList();
-
-const btnAddTask = document.querySelector('.btn'),
-      form = document.getElementById('form'),
-      inputName = document.getElementById('name'),
-      textArea = document.getElementById('descr'),
-      table = document.querySelector('.tbody'),
-      select = document.getElementsByClassName('select'),
-      row = document.getElementsByClassName('row');
-
 
 btnAddTask.addEventListener('click', () => {
     form.classList.toggle('hidden');
@@ -96,11 +112,12 @@ btnAddTask.addEventListener('click', () => {
 
 form.addEventListener('submit', item => {
     item.preventDefault();
-    taskList.add(inputName.value, textArea.value, enumTaskStatus.InProgress, enumTaskStatus.Done, enumTaskStatus.Undone);
-
+    taskList.add(inputName.value, textArea.value);
 
     inputName.value = "";
     textArea.value = "";
     item.target.classList.toggle('hidden');
 });
+
+
 
