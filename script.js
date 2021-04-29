@@ -1,5 +1,4 @@
-const btnAddTask = document.querySelector('.btn-newTask'),
-      form = document.getElementById('form'),
+const form = document.getElementById('form'),
       inputName = document.getElementById('name'),
       textArea = document.getElementById('textArea'),
       wrapper = document.querySelector('.wrapper');
@@ -25,8 +24,19 @@ class Task {
         this.status = enumTaskStatus.InProgress;
 	}
 
-    updateStatus(newStatus){
-        this.status = newStatus;
+    updateStatus(statusValue, newStatus){
+        this.status = statusValue;
+        if(this.status === 'Done') {
+            newStatus.parentElement.parentElement.className = 'task';
+            newStatus.parentElement.parentElement.classList.add('done');
+        }
+        if(this.status === 'Undone') {
+            newStatus.parentElement.parentElement.className = 'task';
+            newStatus.parentElement.parentElement.classList.add('undone');
+        }
+        if(this.status === 'InProgress') {
+            newStatus.parentElement.parentElement.className = 'task';
+        }
     }
 };
 
@@ -60,18 +70,10 @@ class TaskList {
                     select.append(option);
                 }
             
-                select.addEventListener('change', (e) => {
-                    taskList.list[newTask.id - 1].updateStatus(enumTaskStatus[select.value]);
+                select.addEventListener('change', () => {
+                    taskList.list[newTask.id - 1].updateStatus(enumTaskStatus[select.value], select);
 
-                    
-                    // if(e.target === 'Done') {
-                    //     e.target.parentElement.classList.remove('undone');
-                    //     e.target.parentElement.classList.add('done');
-                    // }
-                    // if(e.target === 'Undone') {
-                    //     e.target.parentElement.classList.remove('done');
-                    //     e.target.parentElement.classList.add('undone');
-                    // }
+    
                 });
                 spanStatus.append(select);
                 divTask.append(spanStatus);
@@ -106,7 +108,7 @@ class TaskList {
 
 let taskList = new TaskList();
 
-btnAddTask.addEventListener('click', () => {
+document.querySelector('.btn-newTask').addEventListener('click', () => {
     form.classList.toggle('hidden');
 });
 

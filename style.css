@@ -46,10 +46,10 @@ body {
     width: 30%;
 }
 .header-descr, .descr {
-    width: 40%;
+    width: 47%;
 }
 .header-status, .status {
-    width: 20%;
+    width: 13%;
 }
 .id {
     padding: 5px;
@@ -66,17 +66,17 @@ body {
 .descr {
     padding: 5px;
     box-sizing: border-box;
-    width: 40%;
+    width: 47%;
     text-align: justify;
 }
 .status {
     padding: 5px;
     box-sizing: border-box;
-    width: 20%;
+    width: 13%;
     text-align: center;
 }
 .select {
-    width: 90%;
+    width: 100%;
 }
 .btn-newTask {
     margin-top: 15px;
