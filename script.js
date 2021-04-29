@@ -16,12 +16,14 @@ class Task {
     title;
     description;
     status;
+    trash;
 
-    constructor(id, title, description){
+    constructor(id, title, description, trash){
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = enumTaskStatus.InProgress;
+        this.trash = trash;
 	}
 
     updateStatus(statusValue, newStatus){
@@ -47,8 +49,8 @@ class TaskList {
         this.list = [];
     }
 
-    add(title, description) {
-        let newTask = new Task(this.list.length + 1, title, description);
+    add(title, description, trash) {
+        let newTask = new Task(this.list.length + 1, title, description, trash);
         this.list.push(newTask);
 
         let divTask = document.createElement('div');
@@ -72,8 +74,6 @@ class TaskList {
             
                 select.addEventListener('change', () => {
                     taskList.list[newTask.id - 1].updateStatus(enumTaskStatus[select.value], select);
-
-    
                 });
                 spanStatus.append(select);
                 divTask.append(spanStatus);
@@ -99,12 +99,25 @@ class TaskList {
                 spanId.textContent = `#${newTask.id}`;
                 divTask.append(spanId);
             }
+            
+            if(key === 'trash') {
+                let img = document.createElement('img');
+                img.classList.add('basket');
+                img.setAttribute('src', trash);
+                img.setAttribute('alt', 'trash');
+                divTask.append(img);
+
+                img.addEventListener('click', (e) => {
+                    
+                    taskList.list.splice(e.target, 1);
+                    e.target.parentElement.remove();
+                });
+            }
         }
         wrapper.append(divTask);
     }
+
 }
-
-
 
 let taskList = new TaskList();
 
@@ -114,7 +127,11 @@ document.querySelector('.btn-newTask').addEventListener('click', () => {
 
 form.addEventListener('submit', item => {
     item.preventDefault();
-    taskList.add(inputName.value, textArea.value);
+    taskList.add(
+        inputName.value,
+        textArea.value, 
+        "icon/trash.svg"
+        );
 
     inputName.value = "";
     textArea.value = "";

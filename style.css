@@ -18,7 +18,7 @@ body {
     margin: 0 auto;
     width: 800px;
     background-color: rgb(243, 243, 243);
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: 0px 0px 0px 8px rgb(199, 199, 199);
     padding: 10px;
 }
@@ -35,8 +35,8 @@ body {
     text-align: center;
 }
 .task {
-    margin-top: 5px;
     display: flex;
+    align-items: center;
     border-bottom: 1px solid rgb(160, 159, 159);
 }
 .header-id, .id {
@@ -46,7 +46,7 @@ body {
     width: 30%;
 }
 .header-descr, .descr {
-    width: 47%;
+    width: 49%;
 }
 .header-status, .status {
     width: 13%;
@@ -66,7 +66,7 @@ body {
 .descr {
     padding: 5px;
     box-sizing: border-box;
-    width: 47%;
+    width: 49%;
     text-align: justify;
 }
 .status {
@@ -134,6 +134,19 @@ select:focus {
 .hidden {
     opacity: 1;
     left: 0;
+}
+
+.basket {
+    opacity: 0;
+    margin-left: 5px;
+    text-align: center;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    transition: opacity .2s;
+}
+.task:hover .basket{
+    opacity: 1;
 }
 
 .done {
