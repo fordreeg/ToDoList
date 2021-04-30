@@ -28,16 +28,13 @@ class Task {
 
     updateStatus(statusValue, newStatus){
         this.status = statusValue;
+        newStatus.parentElement.parentElement.className = 'task';
+        
         if(this.status === 'Done') {
-            newStatus.parentElement.parentElement.className = 'task';
             newStatus.parentElement.parentElement.classList.add('done');
         }
         if(this.status === 'Undone') {
-            newStatus.parentElement.parentElement.className = 'task';
             newStatus.parentElement.parentElement.classList.add('undone');
-        }
-        if(this.status === 'InProgress') {
-            newStatus.parentElement.parentElement.className = 'task';
         }
     }
 };
