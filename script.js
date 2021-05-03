@@ -30,25 +30,31 @@ class Task {
         this.status = statusValue;
         newStatus.parentElement.parentElement.className = 'task';
         
-        if(this.status === 'Done') {
-            newStatus.parentElement.parentElement.classList.add('done');
-        }
-        if(this.status === 'Undone') {
-            newStatus.parentElement.parentElement.classList.add('undone');
+        switch(this.status){
+            case 'Done':
+                newStatus.parentElement.parentElement.classList.add('done');
+                break;
+            case 'Undone':
+                newStatus.parentElement.parentElement.classList.add('undone');
+                break;
         }
     }
 };
 
 class TaskList {
     list;
+    nextId
 
     constructor () {
         this.list = [];
+        this.nextId = 1;
     }
 
     add(title, description, trash) {
-        let newTask = new Task(this.list.length + 1, title, description, trash);
+        let newTask = new Task(this.nextId, title, description, trash);
         this.list.push(newTask);
+
+        this.nextId++;
 
         let divTask = document.createElement('div');
         divTask.classList.add('task');
@@ -70,7 +76,8 @@ class TaskList {
                 }
             
                 select.addEventListener('change', () => {
-                    taskList.list[newTask.id - 1].updateStatus(enumTaskStatus[select.value], select);
+                    let taskIndex = taskList.list.findIndex(x => x.id === newTask.id);
+                    taskList.list[taskIndex].updateStatus(enumTaskStatus[select.value], select);
                 });
                 spanStatus.append(select);
                 divTask.append(spanStatus);
@@ -106,7 +113,8 @@ class TaskList {
 
                 img.addEventListener('click', (e) => {
                     
-                    taskList.list.splice(e.target, 1);
+                    let taskIndex = taskList.list.findIndex(x => x.id === newTask.id);
+                    taskList.list.splice(taskIndex, 1);
                     e.target.parentElement.remove();
                 });
             }
